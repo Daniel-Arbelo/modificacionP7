@@ -10,7 +10,7 @@
     "start": "tsc-watch --onSuccess \"node dist/index.js\"",
     "tests": "mocha",
     "doc":"typedoc",
-    "ej1Modificacion": "tsc-watch --onSuccess \"node dist/ej1Modificacion.js\"",
+    "ej1Modificacion": "tsc-watch --onSuccess \"node dist/Modificacion1.js\"",
     "ej2Modificacion": "tsc-watch --onSuccess \"node dist/ej2Modificacion.js\""
   },
   "repository": {
