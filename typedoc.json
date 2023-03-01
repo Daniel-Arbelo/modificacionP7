@@ -1,0 +1,13 @@
+{
+    "entryPoints": [
+        "./src/Ejercicio1.ts",
+        "./src/Ejercicio2.ts",
+        "./src/Ejercicio3.ts",
+        "./src/Ejercicio4.ts",
+        "./src/Ejercicio5.ts",
+        "./src/Ejercicio6.ts",
+        "./src/Ejercicio7.ts",
+        "./src/Ejercicio8.ts"
+    ],
+    "out":"./docs"
+}
