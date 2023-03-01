@@ -11,7 +11,7 @@
     "tests": "mocha",
     "doc":"typedoc",
     "ej1Modificacion": "tsc-watch --onSuccess \"node dist/Modificacion1.js\"",
-    "ej2Modificacion": "tsc-watch --onSuccess \"node dist/ej2Modificacion.js\""
+    "ej2Modificacion": "tsc-watch --onSuccess \"node dist/Modificacion2.js\""
   },
   "repository": {
     "type": "git",
