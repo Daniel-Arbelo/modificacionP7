@@ -6,13 +6,24 @@ export class Cuatroenraya{
     /**
      * Tablero del 4 en raya
      */
-    private maya:number[][];
+    public maya:number[][];
 
     /**
      * Constructor del objeto Cuatroenraya. Inicializa el tablero a 0 con las medidas
      */
     constructor(){
         this.maya = [[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
+    }
+
+    /**
+     * Setter para inicializar el tablero desde las pruebas
+     * @param i fila del tablero
+     * @param j columna del tablero
+     * @param jugador jugador a inicializar
+     */
+    set(i:number, j:number,jugador:number){
+        
+        this.maya[i][j] = jugador;
     }
 
     /**
@@ -112,7 +123,7 @@ export class Cuatroenraya{
                 total++;
             }
             if(total == 4){
-                console.log("El jugador" + jugador + " ha ganado.");
+                //console.log("El jugador" + jugador + " ha ganado.");
                 return true;
             }
         }
@@ -135,7 +146,7 @@ export class Cuatroenraya{
                 total ++;
             }
             if(total == 4){
-                console.log("El jugador" + jugador + " ha ganado.");
+                //console.log("El jugador" + jugador + " ha ganado.");
                 return true;
             }
         }
@@ -192,7 +203,7 @@ export class Cuatroenraya{
 
     }
 }
-
+/*
 //let m:string[][] = [[0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 //console.log(m);
 let m:Cuatroenraya = new Cuatroenraya();
@@ -207,4 +218,4 @@ let interfazCaptura = readline.createInterface({
 interfazCaptura.question("Prueba ",answer =>{
     console.log(answer);
     interfazCaptura.close();
-});
+});*/

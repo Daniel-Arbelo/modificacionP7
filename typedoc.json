@@ -1,13 +1,11 @@
 {
     "entryPoints": [
-        "./src/Ejercicio1.ts",
-        "./src/Ejercicio2.ts",
-        "./src/Ejercicio3.ts",
-        "./src/Ejercicio4.ts",
-        "./src/Ejercicio5.ts",
-        "./src/Ejercicio6.ts",
-        "./src/Ejercicio7.ts",
-        "./src/Ejercicio8.ts"
+        "./src/ejercicio-1/Artista.ts",
+        "./src/ejercicio-1/BibliotecaMusical.ts",
+        "./src/ejercicio-1/Cancion.ts",
+        "./src/ejercicio-1/Discografia.ts",
+        "./src/ejercicio-2/CuatroEnRaya.ts",
+
     ],
     "out":"./docs"
 }
