@@ -1,301 +1,180 @@
-# Práctica 5 - Objetos, clases e interfaces
+# Práctica 6 - Clases e interfaces genéricas. Principios SOLID
 
-## Introducción
-En está práctica nos piden que resolvamos dos ejercicios haciendo uso de las clases y las interfaces, tendremos que generar la documentación y las pruebas como en las prácticas anteriores, y empezar a mirar la parte de principios solid   el cubrimiento del código con instanbull y coveralls. Cada ejercisio se encontrará en una carpeta con un fichero por cada clase.
+## Inroducción
+En esta práctica tendremos que resolver una serie de ejercicios de programación que nos permitirán conocer más en profundidad las clases e interfaces genéricas del lenguaje TypeScript. Además, también deberán utilizar los principios SOLID de diseño orientado a objetos.
 
-## Ejercicio 1 - Biblioteca musical
-### Cancion
-En primer lugar se crea una clase para poder instanciar canciones. Thedrá los sigientes atributos:
+## Objetivos
+El objetivo de la práctica es realizar los 3 ejercicios, cuyo código fuente debe estar en directorios independientes con nombre ejercicio-n/ dentro del directorio src/. También hay que utilizar TypeDoc para la documentación del código, asi como utilizar una metodología por pruebas TDD, en este caso se utilizará mocha y chai e implementar una nueva funcionalidad que es la de el cubrimiento del código con la herramienta instanbull y Coveralls.
 
-- Nombre
-- Duración en segundos
-- Géneros
-- Single (determina si la canción fue lanzada como un single o no)
-- Número de reproducciones
+## Ejercicio 1 - DSIflix
+En primer lugar he definido una clase padre Titulo de la que derivan las clases Película, Documental y Serie, que tienen los datos de dicho título. Después se define la interfaz Stramable que contiene las funciones que tienen que implementar la clase abstracta BasicStreamableCollection de la que derivan las colecciones de películas, documentales y series que contienen arrays de Titulos, en concreto de la clase derivada. Por ejemplo ColeccionDocumentales tiene un array de Documentales.
 
-### Discografía
-Después se crea una clase para poder almacenar las canciones que será la de Discografía, que contendrá 
-
-- Nombre
-- Año de publicación
-- Canciones
-
-Donde canciones será un array del objeto canciones. También tendrá una serie de métodos, que son los siguientes:
-
-- addCancion que permite añadir una canción a una discografía ya creada.
-- getNumeroCanciones que retorna el tamaño del array de canciones
-- getDuracion que retorna la suma de la duracion de todas las canciones
-- getNumeroReproducciones que retorna la suma del numero de reproducciones de todas las canciones
-- getListaDeCanciones que retorna un objeto con las canciones.
-
-### Artista
-Esta clase almacena la informacion de un artista y tiene los siguientes atributos:
-- Nombre
-- Número de oyentes mensuales
-- Discografía
-
-### BibliotecaMusical
-Esta es la clase que almacena los artistas y por lo tanto almacena su discografía y canciones.
-En primer lugar se crea una funcion que pasandole un objeto, se imprime por pantalla en forma de tabla la información.
+## Ejercicio 2 - Implementación de una lista y sus operaciones
+Se ha desarrollado una clase Lista la cual tiene un atributo que es un array genérico, para que se pueda inicializar la clase con diferente tipos de datos. Esta clase tiene una serie de métodos para realizar una serie de operaciones sobre este atributo.
+El primero es append, que pasada otra lista la une al final de la lista a la que se le pasa.
 ```
-    imprimirTabla(datos: object[]){
-        console.table(datos);
-    }
+append(lista2:Lista<T>){
+        for(let i = 0; i < lista2.lenghth(); i++){
+            this.push(lista2.getlista()[i]);
+        }
+}
 ```
-Después de esto se crean diferentes funciones para hacer diferentes búsquedas y si le pasamos el resultado a esta funcion lo sacará por pantalla en forma de tabla.
-La primera búsqueda será la búsqueda por artistas:
+También tiene la un método concatenate que es una funcion estática, que hace uso de append. Pasandole un numero variable se listas, las concaneta en orden.
 ```
-buscarPorArtista(nombre:string){
-        const resultado = this.artistas.filter((artista) => 
-            artista.nombre.toLocaleLowerCase().includes(nombre.toLocaleLowerCase())
-        );
-
-        return resultado.map((artista) => ({
-            nombre: artista.nombre,
-            oyentes:artista.numeroOyentes,
-            numeroDeDiscos: artista.discografia.length,
-        }));
-    }
+static concatenate<T>(...listas:Lista<T>[]):Lista<T>{
+        let sol = new Lista<T>();
+        for(let lista of listas){
+            sol.append(lista);
+        }
+        return sol;
+}
 ```
-Es bastante sencillo, recorre los artistas filtrando los que tengan el nombre pasado. Después se formatea el resultado y se devuelve.
-
-También se implementa una búsqueda por discografía:
-
+El método filter, dada una funcion, aplica la función sobre cada elmento de la clase. Si cumple el predicado lógico de la función pasada, se añade a la solución y al terminar devolverá la nueva lista.
 ```
-buscarPorDiscografia(nombre:string){
-        const resultado = this.artistas
-        .flatMap((artist) => artist.discografia.map((disco) => ({ artist, disco })))
-        .filter(
-            ({ disco }) => disco.nombre.toLowerCase().includes(nombre.toLowerCase())
-        );
-        
-        return resultado.map(({artist,disco}) => ({
-            nombreArtista: artist.nombre,
-            nombreDisco: disco.nombre,
-            ano: disco.ano,
-            numeroCanciones: disco.getNumeroCanciones(),
-            duracion: disco.getDuracion(),
-            reproducciones: disco.getNumeroReproducciones(),
-        }));
-
-    }
-```
-Es bastante parecida a la anterior, se accede a la discografía del artista y después se recorrre cada disco para ir filtrandolos por el nombre pasado y pra acabar se retorna un objeto con toda la información.
-
-Y por último se debe poder buscar por cancion:
-```
-buscarPorCancion(nombre:string){
-        const resultado = this.artistas
-        .flatMap((artist) =>
-            artist.discografia.flatMap((disco) =>
-                disco.getListaDeCanciones().map((cancion) => ({ artist, disco, cancion }))
-            )
-        )
-        .filter(({ cancion }) =>
-            cancion.nombre.toLowerCase().includes(nombre.toLowerCase())
-        );
-
-        return resultado.map(({artist,disco,cancion}) =>({
-            nombreArtista: artist.nombre,
-            nombreDisco: disco.nombre,
-            nombreCancion: cancion.nombre,
-            duracion:cancion.duracion,
-            generos: cancion.generos,
-            single: cancion.single,
-            reproducciones: cancion.reproducciones,
-
-        }));
-    }
-```
-Se recorre la discografía de los artistas y dentro de cada discografía se recorren las canciones filtrando las que coincidan con el nombre pasado. Por último se pasa el resultado.
-
-
-## Ejercicio 2 - Conecta 4
-
-Se almacena el tablero de ajedrez en una matriz de numeros, donde si hay un 0, está vacia la casilla, si hay un 1 es una ficha del jugador1 y si hay un 2 una del juga
-dor 2.
-```
-private maya:number[][];
-```
-en el constructor de la case se inicializa el tablero todo a 0.
-Luego se crean los métodos siguientes:
-```
- quedaHueco():boolean{
-        for(let i = 0; i < 6; i++){
-            for(let j = 0; j < 7; j++){
-                if(this.maya[i][j] == 0){
-                    return true;
-                }
+filter(funcion:(item:T) => boolean):Lista<T>{
+        let sol:Lista<T> = new Lista<T>();
+        for(let elemento of this.lista){
+            if(funcion(elemento) == true){
+                sol.push(elemento);
             }
         }
-        return false;
-    }
+        return sol;
+}
+```
+La funcion map aplica la funcion dada a cada elemento de la lista retorna una nueva lista resultado de haber pasado por la funcion.
 
 ```
-
-Este método recorre la matriz y desde que encuetra un hueco, devuelve true, si no encuentra ningun hueco false.
-
-```
-imptimirTablero():void{
-        let imprimirFila:string = "";
-        for(let i = 0; i < 6; i++){
-            for(let j = 0; j < 7; j++){
-                if(this.maya[i][j] == 1){
-                    imprimirFila = imprimirFila + "O";
-                }
-                else if(this.maya[i][j] == 2){
-                    imprimirFila = imprimirFila + "X";
-                }
-                else{
-                    imprimirFila = imprimirFila + ".";
-                }
-            }
-            console.log(imprimirFila);
-            imprimirFila = "";
+map(transformar:(item:T)=> T):Lista<T>{
+        let sol:Lista<T> = new Lista<T>();
+        for(let elemento of this.lista){
+            sol.push(transformar(elemento));
         }
-    }
-    
+        return sol;
+}
 ```
-El método imprirTabler, recorre el tablero, imprimiendo un punto si está vacía la casilla, una x si si es del jugador 2 y una O si es del jugador 1.
+La función reduce se le pasa una funcion con un un acumulador inicial reduce cada elemento utilizando la funcion pasada. Retorna el valor de aplicar la funcion pasada a la lista con el valor inicial del acumulador.
 ```
- colocarFicha(columna:number):number {
-        for(let i = 0; i < 6; i++){
-            if(!((i+1) > 5)){      
-                if(this.maya[i][columna] == 0 && this.maya[i+1][columna] != 0){
-                    return i;
-                }
-                else{
-                    if(this.maya[i][columna] == 0) {
-                        return i;
-                    }
-                }
-            }
+reduce(trnasformar:(acumulador:T, item:T) => T, valorInicial:T):T{
+        let sol:T = valorInicial;
+        for(let elemento of this.lista){
+            sol = trnasformar(sol, elemento);
         }
-        return -1;
-    }
-```
-Esta función busca la pos más bja de la columna que se le pasa por parámetros, si no encuentra espacio, devuelve un -1, esto es que está llena la columna, si no 
-devuelve la pos de la fila.
-
-```
-columnaAtope(columna:number):boolean{
-        if(this.maya[0][columna] != 0){
-            console.log("Columna llena, coloque la ficha en otra col");
-            return true
-        }
-        return false;
-    }
-```
-
-Devuelve true si está llen, si no false.
-
-```
-comprobarSiHay4(fila:number, columna:number, jugador:number):boolean{
-        // Vertical
-        let encontrado:boolean = false;
-        let total:number = 0;
-        for(let i = 0; i < 6; i ++){
-            if(encontrado){
-                if(this.maya[i][columna] == jugador){
-                    total ++;
-                }
-                else{
-                    encontrado = false;
-                    total = 0;
-                }
-            }
-            if(this.maya[i][columna] == jugador && !encontrado){
-                encontrado = true;
-                total++;
-            }
-            if(total == 4){
-                console.log("El jugador" + jugador + " ha ganado.");
-                return true;
-            }
-        }
-
-        // Horizontal
-        encontrado = false;
-        total = 0;
-        for(let j = 0; j < 7; j ++){
-            if(encontrado){
-                if(this.maya[fila][j] == jugador){
-                    total ++;
-                }
-                else{
-                    encontrado =false;
-                    total = 0;
-                }
-            }
-            if(this.maya[fila][j] == jugador && !encontrado){
-                encontrado = true;
-                total ++;
-            }
-            if(total == 4){
-                console.log("El jugador" + jugador + " ha ganado.");
-                return true;
-            }
-        }
-
-        // Diagonal
-    }
-```
-Esta función comprueba si ya se ha conseguido algun 4 en raya, dada la posición de la ficha que se introduce, comprueba si a partir de ella hay algún 4 en raya, esta
-comprobación se hace cada vez que se introduce una ficha.
-
-```
-start(){
-        let turnojugador:number = 1;
-        let ultimojugador:number = 0;
-        
-        do{
-            let colocarColumnaString:string;
-            let colocarColumna:number = -1;
-            let columnaTope:boolean = true;
-            if(ultimojugador == 1){
-                turnojugador = 2;
-            }else{
-                turnojugador = 1;
-            }
-
-            do{
-                console.log("Turno deel jugador " + turnojugador + ". Elija una casilla del 1 al 7:");
-                let interfazCaptura = readline.createInterface({
-                    input: process.stdin,
-                    output: process.stdout
-                
-                });
-                interfazCaptura.question("introduzca ",answer =>{
-                    colocarColumnaString = answer;
-                    interfazCaptura.close();
-                });
-                colocarColumna = Number(colocarColumnaString); 
-                colocarColumna--;
-                columnaTope = this.columnaAtope(colocarColumna);
-            }while((colocarColumna < 0 || colocarColumna > 6) );
-
-            let colocarFila:number = this.colocarFicha(colocarColumna);
-            this.maya[colocarFila][colocarColumna] = turnojugador;
-            this.imptimirTablero();
-
-            // Revisar si hay 4 en raya
-            if(this.comprobarSiHay4(colocarFila, colocarColumna,turnojugador)){
-                break;
-            }
-
-            ultimojugador = turnojugador;
-            turnojugador ++;
-        }
-        while(this.quedaHueco());
-
-    }
+        return sol;
 }
 ```
 
-Por último la función start, controla a que jugador le toca para que meta una ficha el jugador 1 primero, después el 2, y así hasta que uno de los dos gane. Primero se 
-ve quien va a meter ficha, luego el jugador introduce la columna donde quiere meterla, se comrueba que no esté atope, y si hay espasio, se busca la fila donde estaría, 
-ya tenemos la fila y la columna, lo que queda es colocarla, imprimir el tablero resultado de esto y por último comprobar que no se haya conseguido el 4 en raya. Esto 
-se hace hasta que uno gane, o hasta que se llene el tablero.
+Reverse devuelve la lista con los valores originales pero valores inversos recorre la lista al revez haciendo push de cada uno en una nueva lista.
+```
+reverse():Lista<T>{
+        let sol = new Lista<T>();
+        for(let i = (this.lenghth() - 1); i >=0; i--){
+            sol.push(this.lista[i]);
+        }
+        return sol;
+}
+```
+ForEach itera en los elemntos de la lista invocando la funcion pasada sobre ellos.
+```
+forEach(accion:(item:T) => void):void{
+        for(let elemento of this.lista){
+            accion(elemento);
+        }
+}
+```
 
-## Conclución 
-Esta práctica ha estado bién para familiarizarse con las clases en typescript aunque con un ejercicio hubiera estado bién, ya que al tener que realizar un informe, pruebas, documentación y cada vez se incluyen nuevas herramientas supone demaciado trabajo. Si hubiera sido una práctica más corta se haría más llevadero y la hubiera disfrutado más.
+## Ejercicio 3 - Ampliando la biblioteca musical
+En esta ejercicio hemos basicamente creado una clase llamada single, que se diferencia de disco en que simplemente en vez de tener una lista de canciones tiene una sola cancion.
+después hemos creado otra clase, llamada discografía que contiene una lista de disco y singles, solo discos o solo singles.
+
+```
+class Discografia<T extends Disco, U extends Single>{
+    constructor(private discografia:(T | U)[]){
+
+    }
+
+    getDiscografia(){
+        return this.discografia;
+    }
+    
+    addDiscoSingle(newElement:T | U){
+        this.discografia.push(newElement);
+    }
+
+    getNumberOfElements(){
+        return this.discografia.length;
+    }
+
+    getElement(index:number){
+        return this.discografia[index];
+    }
+
+}
+```
+También tenemos que crear un método dentro de la clase para añadir disco o single, que con tiene un atributo que puede ser un disco o un single.
+Ahora en la clase artista en vez de tener un atributo que es una lista de discos. Tendrá una instancia de la clase Discografía.
+También hay que cambiar los métodos de búsqueda en la bibiliotecaMusical de busqueda por discografía y por cancion. Utilizando un guardian de tipos.
+```
+buscarPorDiscografia(nombre:string){
+        let resultado:(Disco | Single)[]= [];
+        this.artistas
+        .forEach((artist) => {
+            for(let i = 0; i < artist.discografia.getNumberOfElements(); i++){
+                const myElement = artist.discografia.getElement(i);
+                if(myElement instanceof Disco){
+                    if(myElement.nombre == nombre)
+                        resultado.push(myElement);
+                }else if(myElement instanceof Single){
+                    if(myElement.getNombre() == nombre)
+                        resultado.push(myElement);
+                }
+            }
+        })
+
+        return resultado.map((elemento) => ({
+            nombre: (elemento instanceof Disco? elemento.nombre: elemento.getNombre()),
+            ano : (elemento instanceof Disco? elemento.ano: elemento.getAno()),
+            numeroCannciones: (elemento instanceof Disco? elemento.getNumeroCanciones(): 1),
+            duracion: (elemento instanceof Disco? elemento.getDuracion(): elemento.getCancion().duracion),
+            reproducciones: (elemento instanceof Disco? elemento.getNumeroReproducciones(): elemento.getCancion().numeroReproducciones),
+        }));
+}
+```
+```
+buscarPorCancion(nombre:string){
+        let resultado:(Cancion)[]= [];
+        this.artistas
+        .forEach((artist) => {
+            for(let i = 0; i < artist.discografia.getNumberOfElements(); i++){
+                const myElement = artist.discografia.getElement(i);
+                if(myElement instanceof Disco){
+                    myElement.canciones.forEach(element => {
+                        if(element.nombre == nombre){
+                            resultado.push(element);
+                        }
+                    });
+                }else if(myElement instanceof Single){
+                    if(myElement.getCancion().nombre == nombre){
+                        resultado.push(myElement.getCancion());
+                    }
+                }
+            }
+        })
+        return resultado.map((cancion) =>({
+            nombreCancion: cancion.nombre,
+            duracion:cancion.duracion,
+            generos: cancion.genero,
+            single: cancion.single,
+            reproducciones: cancion.numeroReproducciones,
+
+        }));
+
+        
+}
+```
+
+
+## Cubrimiento del código
+Cómo el repo es privado, no se puede añadir a coverall, pero se puede hacer el cubrimiento gracias al uso de 
+```
+nyc npm test
+```

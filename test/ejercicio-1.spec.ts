@@ -10,7 +10,7 @@ import {ColeccionDocumentales} from '../src/ejercicio-1/ColeccionDocumentales';
 
 
 
-describe('Ejercisio 2', () => {
+describe('Ejercicio 1', () => {
     describe('Clase Serie', () => {
         it('Serie("The walking Dead", 100, 2012, 20, 10).getTemporadas() = 10', () => {
             expect(new Serie("The walking Dead", 100, 2012, 20, 10).getTemporadas()).to.be.equal(10);
