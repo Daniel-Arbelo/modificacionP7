@@ -178,4 +178,4 @@ Cómo el repo es privado, no se puede añadir a coverall, pero se puede hacer el
 ```
 nyc npm test
 ```
-![Imagen del cubrimiento](../Images/coverage.png)
+![Imagen del cubrimiento](./Images/coverage.png)
