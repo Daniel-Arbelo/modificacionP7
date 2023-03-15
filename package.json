@@ -14,7 +14,8 @@
     "ej1Modificacion": "tsc-watch --onSuccess \"node dist/Modificacion1.js\"",
     "ej2Modificacion": "tsc-watch --onSuccess \"node dist/Modificacion2.js\"",
     "ejer1": "tsc-watch --onSuccess \"node dist/ejercicio-1/index.js\"",
-    "ejer2": "tsc-watch --onSuccess \"node dist/ejercicio-2/Lista.js\""
+    "ejer2": "tsc-watch --onSuccess \"node dist/ejercicio-2/Lista.js\"",
+    "mp7": "tsc-watch --onSuccess \"node dist/modificacionP7/PrimeNumber.js\""
   },
   "repository": {
     "type": "git",
